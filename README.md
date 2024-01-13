@@ -1,1 +1,1 @@
-# sta302-tutorial2
+# STA302 Tutorial 2
