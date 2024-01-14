@@ -1,0 +1,76 @@
+---
+title: "Number of Bicycles Stolen on Different Premises in Toronto from 2017 to 2023"
+author: "Emily Su"
+date: "16 January 2024"
+date-format: "D MMMM YYYY"
+abstract: "This is my abstract."
+thanks: "Data and code are available at: https://github.com/moonsdust/sta302-tutorial2"
+format:
+  pdf:
+    toc: true
+number-sections: true
+bibliography: references.bib
+---
+# Introduction
+
+
+
+
+# Process {#sec-process}
+
+
+## Plan
+
+
+
+## Simulate
+We will first add the preamble documentation and setup our workspace. We use `R (programming language)` [@citeR], `tidyverse` [@citetidyverse], `janitor` [@citejanitor], `ggplot2` [@citeggplot2], and `knitr` [@citeknitr].
+```{r}
+#### Preamble ####
+# Purpose: To create a graph of the number of bicycles stolen
+# in Toronto on different premises from 2017 to 2023 by reading
+# in data from Open Data Toronto.
+# Author: Emily Su
+# Email: em.su@mail.utoronto.ca
+# Date: 16 January 2024
+# Prerequisites: Know where the data is for bicycle thefts in Toronto. 
+```
+
+```{r}
+#| warning: false
+
+#### Workspace setup #### 
+## (Installing packages (only needs to be done once per computer))
+# install.packages("tidyverse")
+# install.packages("janitor")
+install.packages("ggplot2")
+install.packages("knitr") # To make tables 
+
+
+library(tidyverse) # Contains data-related packages
+library(janitor) # Cleans datasets
+library(ggplot2) # To make graphs
+library(knitr) # To make tables
+```
+
+
+
+
+
+## Acquire
+
+## Explore
+
+
+
+
+
+# Results, Discussion, and Conclusion {#sec-results}
+
+
+
+
+
+\newpage
+
+# References {#sec-references}
