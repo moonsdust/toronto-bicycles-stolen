@@ -132,7 +132,8 @@ cleaned_bike_data <-
   )
 
 # Add new column, num_bikes_stolen and replace year column
-# Referenced tutorial code from STA238
+# Referenced tutorial code from STA238 and documentation for tidyverse
+# https://dplyr.tidyverse.org/reference/group_by.html
 cleaned_bike_data <-
   cleaned_bike_data |>
   group_by(year, premises_type) |>
@@ -200,6 +201,7 @@ cleaned_bike_data |>
 #| label: fig-bikegraph
 #| fig-cap: Number of Bicycles Stolen on Different Toronto Premises from 2017 to 2023
 # Creates graph
+# Referenced tutorial notes from summer STA238 2023 to obtain the code portion of geom_bar(stat="identity") and plot.title
 cleaned_bike_data |>
   ggplot(mapping = aes(x = year, y = num_bikes_stolen, fill = premises_type)) +
   geom_bar(stat="identity") +
@@ -208,7 +210,6 @@ cleaned_bike_data |>
   labs(x = "Year", y = "Number of Bicycles Stolen", fill = "Type of Premise") +
   theme(legend.position = "bottom", plot.title = element_text(size = 9, face = "bold")) +
   scale_fill_viridis_d()
-  # Referenced tutorial notes from summer STA238 2023 to obtain the code portion of geom_bar(stat="identity") and plot.title
 ```
 
 # Results & Discussion {#sec-results}
