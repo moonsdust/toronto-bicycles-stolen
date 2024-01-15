@@ -1,10 +1,10 @@
 ---
-title: "Number of Bicycles Stolen on Different Premises in Toronto from 2017 to 2023"
+title: "On Bicycles Stolen on Different Premises in Toronto from 2017 to 2023"
 author: "Emily Su"
 date: "16 January 2024"
 date-format: "D MMMM YYYY"
-abstract: "This is my abstract."
-thanks: "Data and code are available at: https://github.com/moonsdust/sta302-tutorial2"
+abstract: "Toronto's population is increasing alongside the number of bicycle thefts across the city. We used data from Open Data Toronto to create a graph in order to discover any trends and difference between number of thefts before 2020 and 2020 onwards. Our analysis found that there was a steep decline in the number of bicycle thefts after 2020 with a majority of thefts occuring in the premise type, Outside, in most years except for 2019, 2020, and 2021. Factors like the pandemic could have influence the decline however, further investigation is needed on the demographic of people reporting."
+thanks: "Data and code are available at: https://github.com/moonsdust/toronto-bicycles-stolen"
 format:
   pdf:
     toc: true
@@ -12,19 +12,18 @@ number-sections: true
 bibliography: references.bib
 ---
 # Introduction
+As Toronto's population increases, roads increasingly become packed with roads and bicycles have become one of the more favourable options for transportation, especially during the summer. However, this means that bicycle theft happens around Toronto and on different premises. With the pandemic starting in 2020, we are interested in seeing how the number of bicycle thefts has changed before 2020 versus 2020 onwards. 
 
+In this paper, we will look at the number of bicycles stolen from 2017 to 2023 on different types of premises (Commercial (ex: Gas stations, construction sites, etc.), Outside (ex: Parking lots, roads, etc.), House, Apartment, Transit (ex: subway station), Educational, and Other) in Toronto. We then discuss our results and any implications of it.
 
-
-
-# Process {#sec-process}
-
+# Process & Data {#sec-process}
+In this section, we will discuss the process and some of the code used to analyze and clean the data from `Open Data Toronto` on Bicycle Thefts and create a graph from it [@citeOpenDataToronto]. See the footnote on the first page for the GitHub repository, which contains the data and all code pertaining to this paper. 
 
 ## Plan
-
-
+The sketch showing how we expect the dataset and final graph to look can be found under `inputs/sketches/sketch.png` in the GitHub repository in the footnote of the first page. 
 
 ## Simulate
-We will first add the preamble documentation and setup our workspace. We use `R (programming language)` [@citeR], `tidyverse` [@citetidyverse], `janitor` [@citejanitor], `ggplot2` [@citeggplot2], and `knitr` [@citeknitr].
+We will first add the preamble documentation and setup our workspace. We will use `R (programming language)` [@citeR], `tidyverse` [@citetidyverse], `janitor` [@citejanitor], `ggplot2` [@citeggplot2], and `knitr` [@citeknitr].
 ```{r}
 #### Preamble ####
 # Purpose: To create a graph of the number of bicycles stolen
@@ -37,14 +36,20 @@ We will first add the preamble documentation and setup our workspace. We use `R 
 ```
 
 ```{r}
+#| echo: false
+#| message: false
+
 #| warning: false
 
 #### Workspace setup #### 
 ## (Installing packages (only needs to be done once per computer))
+# the four install.packages calls if this is the first time
+# you opened this document
+
 # install.packages("tidyverse")
 # install.packages("janitor")
-install.packages("ggplot2")
-install.packages("knitr") # To make tables 
+# install.packages("ggplot2")
+# install.packages("knitr")
 
 
 library(tidyverse) # Contains data-related packages
@@ -53,23 +58,162 @@ library(ggplot2) # To make graphs
 library(knitr) # To make tables
 ```
 
+Now, we will create simulated data for the number of bicycle thefts on different Toronto premises from 2017 to 2023. These premises are the following: Commercial, Outside, House, Apartment, Transit, Educational, and Other.
+```{r}
+#| echo: false
+#| message: false
+#### Simulate data ####
+set.seed(646)
 
+number_of_years <- 7
 
+simulated_data <-
+  tibble(
+    # We will repeat each premise name for <number_of_years> times 
+    premise =
+      c(rep("Commercial", number_of_years), 
+        rep("Outside", number_of_years), 
+        rep("House", number_of_years), 
+        rep("Apartment", number_of_years),
+        rep("Transit", number_of_years),
+        rep("Educational", number_of_years),
+        rep("Other", number_of_years)),
+    # We will create a vector for the years 2017 to 2023
+    # and repeat this <number_of_years> times for each premise 
+    year = rep(c(1:number_of_years + 2016), number_of_years),
+    # We will create <number_of_years> * 7 random values 
+    # from a uniform distribution to get
+    # the number of bikes of stolen for each year for each premise 
+    num_bikes_stolen =
+      round(runif(n = number_of_years * 7, min = 0, max = 49))
+  )
+```
 
+```{r}
+#| echo: false
+#| message: false
+#| tbl-cap: Sample of simulated data
+# Creates table
+knitr::kable(head(simulated_data))
+```
 
 ## Acquire
+In this step, we will first read in data from `Open Data Toronto` on Bicycle Thefts and then clean the dataset [@citeOpenDataToronto]. 
+```{r}
+#| echo: false
+#| message: false
+#### Read in the raw data ####
+raw_bike_data <- read_csv(file = "../../inputs/data/bicycle-thefts.csv",
+    show_col_types = FALSE)
+```
+Next, we will clean the column names of the raw data's dataframe, filter for the year 2017 to 2023, and select the following columns: `occ_year` and `premises_type`. We will then rename the column `occ_year` to `year` and create a new column called `num_bikes_stolen` to contain the number of bikes stolen for each `premises_type` for each `year`.
+```{r}
+#| echo: false
+#| message: false
+#### Clean ####
+# Clean the column names
+cleaned_bike_data <- clean_names(raw_bike_data)
+
+# Select our desired columns 
+cleaned_bike_data <-
+  cleaned_bike_data |>
+  filter(occ_year >= 2017 & occ_year <= 2023) |>
+  select(
+    occ_year,
+    premises_type
+  )
+
+# Renaming occ_year column to year
+cleaned_bike_data <-
+  cleaned_bike_data |>
+  rename( # Left side is the new name and the right side is the old name
+    year = occ_year
+  )
+
+# Add new column, num_bikes_stolen and replace year column
+cleaned_bike_data <-
+  cleaned_bike_data |>
+  group_by(year, premises_type) |>
+  mutate(num = n()) |> # count number of rows based on premise and year
+  rename(num_bikes_stolen = num) |>
+  unique() # This will filter out repeated rows
+```
+Now, we will run tests on the clean data to see if it passes the following conditions:
+
+1. "year" does not contain years before 2017 and after 2023  
+
+2. We have 7 types of "premises_type" 
+
+3. num_bikes_stolen is greater than or equal to 0.
+```{r}
+# Tests 
+# 1. "year" does not contain years before 2017 and after 2023
+cleaned_bike_data$year |> min() == 2017
+cleaned_bike_data$year |> max() == 2023
+
+# 2. We have 7 types of "premise" 
+cleaned_bike_data$premises_type |>
+  unique() |>
+  length() == 7
+
+# 3. num_bikes_stolen is greater than or equal to 0.
+cleaned_bike_data$num_bikes_stolen |> min() >= 0
+```
+
+```{r}
+#| echo: false
+#| message: false
+# Export the cleaned data to a CSV file 
+write_csv(
+  x = cleaned_bike_data,
+  file = "../data/cleaned_bike_data.csv"
+)
+```
 
 ## Explore
+We will now create a table and graph for the cleaned data. 
+```{r}
+#| echo: false
+#| message: false
 
+# Import CSV contained the cleaned data
+cleaned_bike_data <-
+  read_csv(
+    file = "../data/cleaned_bike_data.csv",
+    show_col_types = FALSE
+  )
+```
 
+```{r}
+#| echo: false
+#| message: false
+#| tbl-cap: Table of cleaned data on Number of Bicycles Stolen in Toronto on Different Premises from 2017 to 2023 
+# Creates table
+cleaned_bike_data |>
+  kable()
+```
+```{r}
+#| echo: false
+#| message: false
+#| label: graph
+#| fig-cap: Number of Bicycles Stolen on Different Toronto Premises from 2017 to 2023
+# Creates graph
+cleaned_bike_data |>
+  ggplot(mapping = aes(x = year, y = num_bikes_stolen, fill = premises_type)) +
+  geom_bar(stat="identity") +
+  ggtitle("Number of Bicycles Stolen on Different Premises in Toronto from 2017 to 2023") +
+  theme_minimal() +
+  labs(x = "Year", y = "Number of Bicycles Stolen", fill = "Type of Premise") +
+  theme(legend.position = "bottom", plot.title = element_text(size = 9, face = "bold")) +
+  scale_fill_viridis_d()
+```
+# Results & Discussion {#sec-results}
 
+We obtained data from Open Data Toronto on Bicycle Thefts that started in 2013 [@citeOpenDataToronto]. We then used the statistical programming language `R` [@citeR], `tidyverse` [@citetidyverse], and `janitor` [@citejanitor] to clean, tidy, and analyze the dataset. We followed the process (Plan, Simulate, Acquire, and Explore) to obtain a graph on the number of bicycles stolen during each year in Toronto for each type of premise [@graph] using `ggplot2` [@citeggplot2], and `knitr` [@citeknitr].
 
+From our results, @graph shows that 2018 had the most number of bicycle thefts with the most occurring Outside such as a parking lot and road. In contrast, the least number of bicycle thefts occurred in 2023 with the most thefts occurring at the premise type, outside. The number of bicycle thefts declined after 2020 when compared to the years before 2020. We can also see that in 2020 and 2021, the most number of bicycle thefts occurred at an apartment. We can predict that this could have been due to factors like the lockdowns and people staying at home more. This can also been seen in 2019 as well. For all years except for 2019, 2020, and 2021, the most bicycle thefts occurred outside.
 
-# Results, Discussion, and Conclusion {#sec-results}
-
-
-
-
+However, this data only contained bicycle thefts that were reported and the result we would have gotten if all bicycle thefts were reported could look completely different from our current results. Some might have not reported due to various reasons such as historical discrimination from the police, the police station being located too far, or not having access to a phone. Further investigation is needed on the demographics (such as income) of people reporting bicycle theft.
 
 \newpage
 
