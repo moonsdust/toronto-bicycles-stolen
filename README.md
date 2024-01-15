@@ -4,7 +4,7 @@
 
 This folder contains the paper, "On Bicycles Stolen on Different Premises in Toronto from 2017 to 2023" and the corresponding code and data for it.
 
-To use this folder and run the code yourself, click the green "Code" button", then "Download ZIP".
+To use this folder and run the code yourself, click the green "Code" button" and then "Download ZIP". This project was originally create through RStudio and Posit Cloud. 
 
 ## File Structure
 
