@@ -3,7 +3,7 @@ title: "On Bicycles Stolen on Different Premises in Toronto from 2017 to 2023"
 author: "Emily Su"
 date: "16 January 2024"
 date-format: "D MMMM YYYY"
-abstract: "Toronto's population is increasing alongside the number of bicycle thefts across the city. We used data from Open Data Toronto to create a graph in order to discover any trends and difference between number of thefts before 2020 and 2020 onwards. Our analysis found that there was a steep decline in the number of bicycle thefts after 2020 with a majority of thefts occuring in the premise type, Outside, in most years except for 2019, 2020, and 2021. Factors like the pandemic could have influence the decline however, further investigation is needed on the demographic of people reporting."
+abstract: "Toronto's population is increasing alongside the number of bicycle thefts across the city. We used data from Open Data Toronto to create a graph to discover any trends and differences between the number of bicycle thefts before 2020 and 2020 onwards. Our analysis found that there was a steep decline in the number of bicycle thefts after 2020 with a majority of thefts occurring in the premise type, Outside, in most years except for 2019, 2020, and 2021. Factors like the pandemic could have influenced the decline however, further investigation is needed on the demographic of people reporting."
 thanks: "Data and code are available at: https://github.com/moonsdust/toronto-bicycles-stolen"
 format:
   pdf:
@@ -195,7 +195,7 @@ cleaned_bike_data |>
 ```{r}
 #| echo: false
 #| message: false
-#| label: graph
+#| label: fig-bikegraph
 #| fig-cap: Number of Bicycles Stolen on Different Toronto Premises from 2017 to 2023
 # Creates graph
 cleaned_bike_data |>
@@ -207,11 +207,12 @@ cleaned_bike_data |>
   theme(legend.position = "bottom", plot.title = element_text(size = 9, face = "bold")) +
   scale_fill_viridis_d()
 ```
+
 # Results & Discussion {#sec-results}
 
-We obtained data from Open Data Toronto on Bicycle Thefts that started in 2013 [@citeOpenDataToronto]. We then used the statistical programming language `R` [@citeR], `tidyverse` [@citetidyverse], and `janitor` [@citejanitor] to clean, tidy, and analyze the dataset. We followed the process (Plan, Simulate, Acquire, and Explore) to obtain a graph on the number of bicycles stolen during each year in Toronto for each type of premise [@graph] using `ggplot2` [@citeggplot2], and `knitr` [@citeknitr].
+We obtained data from Open Data Toronto on Bicycle Thefts that started in 2013 [@citeOpenDataToronto]. We then used the statistical programming language `R` [@citeR], `tidyverse` [@citetidyverse], and `janitor` [@citejanitor] to clean, tidy, and analyze the dataset. We followed the process (Plan, Simulate, Acquire, and Explore) to obtain a graph on the number of bicycles stolen during each year in Toronto for each type of premise (@fig-bikegraph) using `ggplot2` [@citeggplot2], and `knitr` [@citeknitr].
 
-From our results, @graph shows that 2018 had the most number of bicycle thefts with the most occurring Outside such as a parking lot and road. In contrast, the least number of bicycle thefts occurred in 2023 with the most thefts occurring at the premise type, outside. The number of bicycle thefts declined after 2020 when compared to the years before 2020. We can also see that in 2020 and 2021, the most number of bicycle thefts occurred at an apartment. We can predict that this could have been due to factors like the lockdowns and people staying at home more. This can also been seen in 2019 as well. For all years except for 2019, 2020, and 2021, the most bicycle thefts occurred outside.
+@fig-bikegraph from our results shows that 2018 had the most number of bicycle thefts with the most occurring Outside such as a parking lot and road. In contrast, the least number of bicycle thefts occurred in 2023 with the most thefts occurring at the premise type, outside. The number of bicycle thefts declined after 2020 when compared to the years before 2020. We can also see that in 2020 and 2021, the most number of bicycle thefts occurred at an apartment. We can predict that this could have been due to factors like the lockdowns and people staying at home more. This can also been seen in 2019 as well. For all years except for 2019, 2020, and 2021, the most bicycle thefts occurred outside.
 
 However, this data only contained bicycle thefts that were reported and the result we would have gotten if all bicycle thefts were reported could look completely different from our current results. Some might have not reported due to various reasons such as historical discrimination from the police, the police station being located too far, or not having access to a phone. Further investigation is needed on the demographics (such as income) of people reporting bicycle theft.
 
