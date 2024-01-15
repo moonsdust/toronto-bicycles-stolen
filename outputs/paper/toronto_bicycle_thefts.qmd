@@ -202,6 +202,8 @@ cleaned_bike_data |>
 #| fig-cap: Number of Bicycles Stolen on Different Toronto Premises from 2017 to 2023
 # Creates graph
 # Referenced tutorial notes from summer STA238 2023 to obtain the code portion of geom_bar(stat="identity") and plot.title
+# Referenced chapter Chapter 5 of Telling Stories with Data by Rohan Alexander for 
+# scale_fill_viridis_d(), theme(), mapping = aes(...)
 cleaned_bike_data |>
   ggplot(mapping = aes(x = year, y = num_bikes_stolen, fill = premises_type)) +
   geom_bar(stat="identity") +
