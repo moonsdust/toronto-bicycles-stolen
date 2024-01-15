@@ -92,9 +92,10 @@ simulated_data <-
 ```{r}
 #| echo: false
 #| message: false
-#| tbl-cap: Sample of simulated data
+#| tbl-cap: Simulated Data of the Number of Bicycle Stolen on Different Premises in Toronto (2017-2023)
 # Creates table
-knitr::kable(head(simulated_data))
+head(simulated_data) |>
+  kable()
 ```
 
 ## Acquire
@@ -131,6 +132,7 @@ cleaned_bike_data <-
   )
 
 # Add new column, num_bikes_stolen and replace year column
+# Referenced tutorial code from STA238
 cleaned_bike_data <-
   cleaned_bike_data |>
   group_by(year, premises_type) |>
@@ -187,7 +189,7 @@ cleaned_bike_data <-
 ```{r}
 #| echo: false
 #| message: false
-#| tbl-cap: Table of cleaned data on Number of Bicycles Stolen in Toronto on Different Premises from 2017 to 2023 
+#| tbl-cap: Number of Bicycles Stolen in Toronto on Different Premises from 2017 to 2023 
 # Creates table
 cleaned_bike_data |>
   kable()
@@ -206,6 +208,7 @@ cleaned_bike_data |>
   labs(x = "Year", y = "Number of Bicycles Stolen", fill = "Type of Premise") +
   theme(legend.position = "bottom", plot.title = element_text(size = 9, face = "bold")) +
   scale_fill_viridis_d()
+  # Referenced tutorial notes from summer STA238 2023 to obtain the code portion of geom_bar(stat="identity") and plot.title
 ```
 
 # Results & Discussion {#sec-results}
